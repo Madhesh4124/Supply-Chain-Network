@@ -1,0 +1,31 @@
+nodeId,name,type,latitude,longitude,capacity,region,status
+N1,Shanghai Port,Port,31.2304,121.4737,50000,Asia,active
+N2,Los Angeles Port,Port,33.7405,-118.2720,45000,North America,active
+N3,Rotterdam Port,Port,51.9244,4.4777,40000,Europe,active
+N4,Singapore Hub,Port,1.3521,103.8198,38000,Asia,active
+N5,Shenzhen Manufacturing Plant,Manufacturing Plant,22.5431,114.0579,25000,Asia,active
+N6,Chicago Distribution Center,Distribution Center,41.8781,-87.6298,30000,North America,active
+N7,Hamburg Warehouse,Warehouse,53.5511,9.9937,20000,Europe,active
+N8,Tokyo Warehouse,Warehouse,35.6762,139.6503,22000,Asia,active
+N9,New York Distribution Hub,Distribution Center,40.7128,-74.0060,28000,North America,active
+N10,London Distribution Center,Distribution Center,51.5074,-0.1278,25000,Europe,active
+N11,Dubai Logistics Hub,Distribution Center,25.2048,55.2708,32000,Middle East,active
+N12,Mumbai Port,Port,19.0760,72.8777,35000,Asia,active
+N13,Seattle Manufacturing,Manufacturing Plant,47.6062,-122.3321,18000,North America,active
+N14,Frankfurt Warehouse,Warehouse,50.1109,8.6821,19000,Europe,active
+N15,Hong Kong Port,Port,22.3193,114.1694,42000,Asia,active
+N16,Miami Distribution Center,Distribution Center,25.7617,-80.1918,24000,North America,active
+N17,Barcelona Warehouse,Warehouse,41.3851,2.1734,17000,Europe,active
+N18,Bangkok Distribution Hub,Distribution Center,13.7563,100.5018,21000,Asia,active
+N19,São Paulo Warehouse,Warehouse,-23.5505,-46.6333,23000,South America,active
+N20,Sydney Distribution Center,Distribution Center,-33.8688,151.2093,20000,Oceania,active
+N21,Mexico City Manufacturing,Manufacturing Plant,19.4326,-99.1332,16000,North America,disrupted
+N22,Paris Distribution Center,Distribution Center,48.8566,2.3522,22000,Europe,active
+N23,Toronto Warehouse,Warehouse,43.6532,-79.3832,18000,North America,active
+N24,Berlin Logistics Center,Distribution Center,52.5200,13.4050,19000,Europe,active
+N25,Seoul Manufacturing Plant,Manufacturing Plant,37.5665,126.9780,20000,Asia,active
+N26,Cairo Distribution Hub,Distribution Center,30.0444,31.2357,15000,Africa,active
+N27,Cape Town Port,Port,-33.9249,18.4241,12000,Africa,active
+N28,Vancouver Warehouse,Warehouse,49.2827,-123.1207,17000,North America,active
+N29,Milan Distribution Center,Distribution Center,45.4642,9.1900,16000,Europe,active
+N30,Osaka Manufacturing,Manufacturing Plant,34.6937,135.5023,19000,Asia,disrupted

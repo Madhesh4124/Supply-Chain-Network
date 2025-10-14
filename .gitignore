@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Environment variables
+.env
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Reports
+backend/reports/*
+!backend/reports/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+frontend/build/
+frontend/dist/
