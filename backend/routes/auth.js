@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 
@@ -8,6 +10,17 @@ const { protect } = require('../middleware/auth');
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d'
+  });
+};
+
+// Email transporter configuration
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE || 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
   });
 };
 
@@ -123,6 +136,109 @@ router.put('/update-preferences', protect, async (req, res) => {
 
     await user.save();
     res.json({ message: 'Preferences updated successfully', user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// @route   POST /api/auth/forgot-password
+// @desc    Send password reset email
+// @access  Public
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Please provide an email address' });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'No account found with this email address' });
+    }
+
+    // Get reset token
+    const resetToken = user.getResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+
+    // Create reset URL
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${resetToken}`;
+
+    // Email message
+    const message = `
+      <h2>Password Reset Request</h2>
+      <p>You are receiving this email because you (or someone else) has requested a password reset for your account.</p>
+      <p>Please click on the following link to reset your password:</p>
+      <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 5px; margin: 10px 0;">Reset Password</a>
+      <p>Or copy and paste this URL into your browser:</p>
+      <p>${resetUrl}</p>
+      <p>This link will expire in 10 minutes.</p>
+      <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+    `;
+
+    try {
+      const transporter = createTransporter();
+      await transporter.sendMail({
+        from: `"Supply Chain Network" <${process.env.EMAIL_USER}>`,
+        to: user.email,
+        subject: 'Password Reset Request',
+        html: message
+      });
+
+      res.json({ message: 'Password reset email sent successfully' });
+    } catch (error) {
+      console.error('Email error:', error);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({ message: 'Email could not be sent. Please try again later.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// @route   POST /api/auth/reset-password/:resetToken
+// @desc    Reset password using token
+// @access  Public
+router.post('/reset-password/:resetToken', async (req, res) => {
+  try {
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({ message: 'Please provide a new password' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Get hashed token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.resetToken)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+
+    // Set new password
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({ message: 'Password reset successful. You can now login with your new password.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error', error: error.message });

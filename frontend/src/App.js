@@ -8,6 +8,8 @@ import GraphView from './components/GraphView';
 import Upload from './components/Upload';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -121,6 +123,12 @@ function App() {
                 <Route path="/register" element={
                   isAuthenticated ? <Navigate to="/" replace /> : <Register onRegister={handleLogin} />
                 } />
+                <Route path="/forgot-password" element={
+                  isAuthenticated ? <Navigate to="/" replace /> : <ForgotPassword />
+                } />
+                <Route path="/reset-password/:token" element={
+                  isAuthenticated ? <Navigate to="/" replace /> : <ResetPassword />
+                } />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
@@ -129,6 +137,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="/register" element={<Register onRegister={handleLogin} />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         )}
